@@ -3,7 +3,6 @@
   import { goto } from "$app/navigation";
   import { trpc } from "$lib/trpc/client";
   import { Card, Button, Label, Input, Checkbox } from "flowbite-svelte";
-  import { LOGIN_TOKEN_NAME } from "$lib/constants";
 
   // On this page:
   // - Unfulfilled orders (Display first 3-5, then have button that says)

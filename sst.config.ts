@@ -5,12 +5,11 @@ export default {
   config(_input) {
     return {
       name: "picky",
-      region: "us-west-1"
+      region: "us-west-2"
     };
   },
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const site = new SvelteKitSite(stack, "site");
       const database = new RDS(stack, "database", {
         engine: "postgresql13.9",
         defaultDatabaseName: "picky",
@@ -19,6 +18,9 @@ export default {
           path: "src/lib/server/db/types.ts",
           camelCase: true
         }
+      });
+      const site = new SvelteKitSite(stack, "site", {
+        bind: [database]
       });
 
       stack.addOutputs({

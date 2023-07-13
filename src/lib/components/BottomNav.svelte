@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { BottomNav, BottomNavItem, Skeleton, ImagePlaceholder } from "$lib";
+  import { BottomNav, BottomNavItem, Skeleton, ImagePlaceholder } from "flowbite-svelte";
+
   $: activeUrl = $page.url.pathname;
   let svgClass = "w-6 h-6 mb-1 text-gray-500 group-hover:text-primary-600";
   let svgActiveClass = "w-6 h-6 mb-1 text-primary-700 group-hover:text-primary-900";

@@ -3,12 +3,12 @@
   import { goto } from "$app/navigation";
   import { trpc } from "$lib/trpc/client";
   import { Alert, Card, Button, Label, Input, Checkbox, Spinner } from "flowbite-svelte";
-  import { LOGIN_TOKEN_NAME } from "$lib/constants";
+  import { SESSION_TOKEN_NAME } from "$lib/constants";
+  import type { TRPCClientError } from "@trpc/client";
 
   let email = "";
   let password = "";
 
-  // TODO: render these
   let loading = false;
   let error = "";
 
@@ -18,18 +18,18 @@
 
     try {
       const token = await trpc($page).login.mutate({ email, password });
-      localStorage.setItem(LOGIN_TOKEN_NAME, token);
+      localStorage.setItem(SESSION_TOKEN_NAME, token);
       await goto("/pickup-console");
     } catch (err) {
-      error = `${err}`;
+      error = (err as TRPCClientError<any>).message;
     } finally {
       loading = false;
     }
   }
 </script>
 
-<div class="w-full min-h-screen">
-  <Card class="mx-auto my-auto">
+<div class="justify-center">
+  <Card>
     <form class="flex flex-col space-y-6" on:submit={login}>
       <h3 class="text-xl font-medium text-gray-900">Sign in to our platform</h3>
       <Label class="space-y-2">
@@ -44,7 +44,13 @@
       </Label>
       <Label class="space-y-2">
         <span>Password</span>
-        <Input type="password" name="password" placeholder="•••••" required bind:value={password} />
+        <Input
+          type="password"
+          name="password"
+          placeholder="••••••••"
+          required
+          bind:value={password}
+        />
       </Label>
       <div class="flex items-start">
         <Checkbox>Remember me</Checkbox>
@@ -60,11 +66,11 @@
       </Button>
       <div class="text-sm font-medium text-gray-500">
         Not registered?
-        <a href="/" class="text-primary-700 hover:underline">Create account</a>
+        <a href="/register" class="text-primary-700 hover:underline">Create account</a>
       </div>
 
       {#if error}
-        <Alert>
+        <Alert class="bg-error-200">
           <b>Error: </b>
           {error}
         </Alert>

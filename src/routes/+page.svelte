@@ -5,14 +5,14 @@
 <svelte:head>
   <title>Picky</title>
 
-  <!--
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet" />
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-  -->
+  <link href="/css/aos.css" rel="stylesheet" />
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/css/bootstrap-icons.css" rel="stylesheet" />
+  <link href="/css/boxicons.min.css" rel="stylesheet" />
+  <link href="/css/remixicon.css" rel="stylesheet" />
+  <link href="/css/swiper-bundle.min.css" rel="stylesheet" />
+
+  <script src="/js/aos.js"></script>
 </svelte:head>
 
 <header class="fixed-top d-flex align-items-center header-transparent" id="header">

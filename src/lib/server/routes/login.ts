@@ -2,7 +2,7 @@ import { z } from "zod";
 import { uuid } from "uuidv4";
 import * as scrypt from "scrypt-kdf";
 import { cleanupSessionsForUser } from "$lib/server/utils";
-import { router, publicProcedure } from "$lib/trpc/router/base";
+import { router, publicProcedure } from "$lib/trpc/base-router";
 import { db } from "$lib/server/db";
 
 export const loginRouter = router({
@@ -19,10 +19,13 @@ export const loginRouter = router({
         .select(["id", "passwordHash"])
         .where("email", "=", input.email)
         .executeTakeFirst();
+      if (!user) {
+        throw new Error("No account found with provided email/password");
+      }
 
-      const passwordHashBytes = new TextEncoder().encode(user?.passwordHash || "");
+      const passwordHashBytes = new TextEncoder().encode(user.passwordHash);
       const validPassword = await scrypt.verify(passwordHashBytes, input.password);
-      if (!user || !validPassword) {
+      if (!validPassword) {
         throw new Error("No account found with provided email/password");
       }
 
