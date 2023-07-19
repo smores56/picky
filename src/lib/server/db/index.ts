@@ -1,20 +1,15 @@
-import { CamelCasePlugin, Kysely } from "kysely";
-import { DataApiDialect } from "kysely-data-api";
-import { RDSData } from "@aws-sdk/client-rds-data";
-import type { Database } from "./types";
-import { RDS } from "sst/node/rds";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import postgres from "postgres";
+import { env } from "$env/dynamic/private";
+import * as schema from "./schema";
 
-const dataApi = new DataApiDialect({
-  mode: "postgres",
-  driver: {
-    client: new RDSData({}),
-    database: RDS.database.defaultDatabaseName,
-    secretArn: RDS.database.secretArn,
-    resourceArn: RDS.database.clusterArn
-  }
+// for migrations
+const migrationClient = postgres(env.DATABASE_URL, { max: 1 });
+migrate(drizzle(migrationClient), {
+  migrationsFolder: "src/lib/server/db/migrations"
 });
 
-export const db = new Kysely<Database>({
-  plugins: [new CamelCasePlugin()],
-  dialect: dataApi
-});
+// for query purposes
+const queryClient = postgres(env.DATABASE_URL);
+export const db = drizzle(queryClient, { schema });

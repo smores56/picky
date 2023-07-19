@@ -2,8 +2,10 @@ import { z } from "zod";
 import { uuid } from "uuidv4";
 import * as scrypt from "scrypt-kdf";
 import { cleanupSessionsForUser } from "$lib/server/utils";
-import { router, publicProcedure } from "$lib/trpc/base-router";
+import { router, publicProcedure } from "$lib/trpc/router/base";
 import { db } from "$lib/server/db";
+import { eq } from "drizzle-orm";
+import { sessions, users } from "$lib/server/db/schema";
 
 export const loginRouter = router({
   login: publicProcedure
@@ -14,11 +16,9 @@ export const loginRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await db
-        .selectFrom("users")
-        .select(["id", "passwordHash"])
-        .where("email", "=", input.email)
-        .executeTakeFirst();
+      const user = (await db.select().from(users).where(eq(users.email, input.email)).limit(1)).at(
+        0
+      );
       if (!user) {
         throw new Error("No account found with provided email/password");
       }
@@ -31,31 +31,26 @@ export const loginRouter = router({
 
       await cleanupSessionsForUser(user.id);
 
-      const existingSession = await db
-        .selectFrom("sessions")
-        .select("token")
-        .where("origin", "=", ctx.clientAddress)
-        .where("userId", "=", user.id)
-        .executeTakeFirst();
+      const existingSessions = await db
+        .select()
+        .from(sessions)
+        .where(eq(sessions.origin, ctx.clientAddress))
+        .where(eq(sessions.userId, user.id));
 
-      if (existingSession) {
+      if (existingSessions.length > 0) {
         await db
-          .updateTable("sessions")
+          .update(sessions)
           .set({ updatedAt: new Date() })
-          .where("token", "=", existingSession.token)
-          .execute();
+          .where(eq(sessions.token, existingSessions[0].token));
 
-        return existingSession.token;
+        return existingSessions[0].token;
       } else {
         const token = uuid();
-        await db
-          .insertInto("sessions")
-          .values({
-            token,
-            origin: ctx.clientAddress,
-            userId: user.id
-          })
-          .execute();
+        await db.insert(sessions).values({
+          token,
+          origin: ctx.clientAddress,
+          userId: user.id
+        });
 
         return token;
       }
