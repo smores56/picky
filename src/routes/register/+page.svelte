@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Card, Button, Label, Input, Checkbox, Spinner } from "flowbite-svelte";
+  import { Card, Button, Label, Input, Spinner } from "flowbite-svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { trpc } from "$lib/trpc/client";
@@ -34,7 +34,7 @@
 
   <Card class="flex flex-none w-1/2 h-1/2">
     <form class="flex-none flex-col space-y-6" on:submit|preventDefault={login}>
-      <h3 class="text-xl font-medium text-gray-900">Sign in to Picky</h3>
+      <h3 class="text-xl font-medium text-gray-900">Sign up for Picky</h3>
       <Label class="space-y-2">
         <span>Email</span>
         <Input
@@ -55,21 +55,19 @@
           bind:value={password}
         />
       </Label>
-      <div class="flex items-start">
-        <Checkbox>Remember me</Checkbox>
-        <a href="/" class="ml-auto text-sm text-primary-700 hover:underline">Lost password?</a>
-      </div>
+
       <Button color="primary" type="submit" class="w-full">
         {#if loading}
           <Spinner class="mr-3" size="4" color="white" />
-          Logging in...
+          Creating...
         {:else}
-          Log in to your account
+          Create your account
         {/if}
       </Button>
+
       <div class="text-sm font-medium text-gray-500">
-        Not registered?
-        <a href="/register" class="text-primary-700 hover:underline">Create account</a>
+        Already registered?
+        <a href="/login" class="text-primary-700 hover:underline">Log in</a>
       </div>
     </form>
   </Card>

@@ -1,251 +1,164 @@
-<script>
+<script lang="ts">
+  import { Heading, P, Button, Input, Label, Card, List, Li } from "flowbite-svelte";
+
   import Footer from "$lib/components/Footer.svelte";
+  import Navbar from "$lib/components/Navbar.svelte";
 </script>
 
 <svelte:head>
   <title>Picky</title>
-
-  <link href="/css/aos.css" rel="stylesheet" />
-  <link href="/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="/css/bootstrap-icons.css" rel="stylesheet" />
-  <link href="/css/boxicons.min.css" rel="stylesheet" />
-  <link href="/css/remixicon.css" rel="stylesheet" />
-  <link href="/css/swiper-bundle.min.css" rel="stylesheet" />
-
-  <script src="/js/aos.js"></script>
 </svelte:head>
 
-<header class="fixed-top d-flex align-items-center header-transparent" id="header">
-  <div class="container d-flex align-items-center justify-content-between">
-    <div class="logo">
-      <a href="index.html">
-        <img alt="" class="img-fluid" src="/logo.png" />
-      </a>
-    </div>
+<Navbar />
 
-    <nav class="navbar" id="navbar">
-      <ul>
-        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-        <li><a class="nav-link scrollto" href="#about">About</a></li>
-        <li><a class="nav-link scrollto" href="#team">Team</a></li>
-        <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<section id="hero">
-  <div class="container">
-    <div class="row justify-content-between">
-      <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex align-items-center">
-        <div data-aos="zoom-out">
-          <img alt="" class="img-fluid" src="logo.png" style="width: 16%;" />
-          <h1>
-            In store pickup<br />
-            made <span>simple</span>
-          </h1>
-
-          <h2>We make in store pick-up easy...</h2>
-
-          <div class="cus_search">
-            <div class="col-lg-12 col-md-10 footer-newsletter">
-              <form action="" method="post">
-                <input name="email" placeholder="Picky..." type="email" /><input
-                  type="submit"
-                  value="Search"
-                />
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="300">
-        <img alt="" class="img-fluid animated" src="/map.png" />
-      </div>
-    </div>
-  </div>
-  <svg class="hero-waves" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <path
-        d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
-        id="wave-path"
-      /></defs
+<section class="flex flex-row p-12">
+  <div class="flex flex-col justify-center w-1/2 min-h-full">
+    <Heading
+      tag="h1"
+      class="mb-4"
+      customSize="align-center text-center text-4xl font-extrabold md:text-5xl lg:text-6xl"
     >
-    <g class="wave1"> <use fill="rgba(255,255,255, .1)" x="50" xlink:href="#wave-path" y="3" /></g>
-    <g class="wave2"> <use fill="rgba(255,255,255, .2)" x="50" xlink:href="#wave-path" y="0" /></g>
-    <g class="wave3"> <use fill="#fff" x="50" xlink:href="#wave-path" y="9" /></g>
-  </svg>
+      We make in-store pickup <i>easy</i>.
+    </Heading>
+
+    <div class="my-6 mr-6">
+      <Label for="large-input" class="block mb-2">Zip Code</Label>
+      <Input size="lg" type="number" minlength="5" maxlength="5" placeholder="12345" />
+      <Button color="primary" class="mt-6 w-full">Find a location</Button>
+    </div>
+  </div>
+
+  <div class="flex flex-col justify-center w-1/2">
+    <img height="100%" src="/map.png" alt="Map graphic" />
+  </div>
 </section>
 
-<main id="main">
-  <!-- ======= About Section ======= -->
-  <section class="about" id="about">
-    <div class="container-fluid">
-      <div class="row">
-        <div
-          class="col-xl-6 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5"
-          data-aos="fade-left"
-        >
-          <div class="section-title aos-init aos-animate" data-aos="fade-up">
-            <h2>About Picky</h2>
+<section class="flex flex-row p-12 bg-primary-300">
+  <div class="flex flex-col justify-center w-1/2">
+    <img height="100%" src="/about2.png" alt="Map graphic" />
+  </div>
 
-            <p>What We Do</p>
-          </div>
+  <div class="flex flex-col w-1/2 ml-4">
+    <Heading tag="h2" class="mb-4" customSize="align-center text-center text-4xl font-extrabold">
+      About Picky
+    </Heading>
 
-          <p>
-            At Picky, we understand the importance of providing seamless and convenient experiences
-            for digital native brands and retailers. That&#39;s why we&#39;re dedicated to making
-            local pickup hassle-free and efficient, all while ensuring excellent customer service.
-          </p>
+    <P class="mb-4">
+      At Picky, we understand the importance of providing seamless and convenient experiences for
+      digital native brands and retailers. That's why we're dedicated to making local pickup
+      hassle-free and efficient, all while ensuring excellent customer service.
+    </P>
 
-          <p>
-            Our mission is to empower digital brands to offer local pickup options that align with
-            their brand identity and meet their customers&#39; expectations. By leveraging our
-            expertise and network of brand-appropriate locations, we streamline the pickup process
-            and create a positive customer experience from start to finish.
-          </p>
-        </div>
-      </div>
+    <P>
+      Our mission is to empower digital brands to offer local pickup options that align with their
+      brand identity and meet their customers' expectations. By leveraging our expertise and network
+      of brand-appropriate locations, we streamline the pickup process and create a positive
+      customer experience from start to finish.
+    </P>
+  </div>
+</section>
+
+<section class="flex flex-col items-center justify-center p-12">
+  <Heading tag="h2" class="mb-4" customSize="align-center text-center text-4xl font-extrabold">
+    Our Platform
+  </Heading>
+
+  <Card size="md" padding="md" class="my-3">
+    <img alt="" class="img-fluid" src="/one.png" width="50px" />
+    <h5 class="text-2xl">Beautiful Locations with Great Staff</h5>
+    <List list="disc">
+      <Li class="text-sm">We vet each pickup location using our Picky Standards</Li>
+      <Li class="text-sm">We audit with secret shoppers to maintain quality standards</Li>
+    </List>
+  </Card>
+
+  <Card size="md" padding="md" class="my-3">
+    <img alt="" class="img-fluid" src="/two.png" width="50px" />
+    <h5 class="text-2xl">Your Local Store That Matches Your Brand</h5>
+    <List list="disc">
+      <Li class="text-sm">We match purchases with relevant pick up locations</Li>
+      <Li class="text-sm">No picking up a new dress at a tire shop</Li>
+    </List>
+  </Card>
+
+  <Card size="md" padding="md" class="my-3">
+    <img alt="" class="img-fluid" src="/three.png" width="50px" />
+    <h5 class="text-2xl">Awesome Customer Support Experience</h5>
+    <List list="disc">
+      <Li class="text-sm">Need to return an item? Picky makes ordering replacements a snap</Li>
+    </List>
+  </Card>
+</section>
+
+<section class="flex flex-col p-12 bg-primary-300">
+  <Heading tag="h2" class="mb-6" customSize="align-center text-center text-4xl font-extrabold">
+    Key Features
+  </Heading>
+
+  <div class="flex flex-row mb-6">
+    <div class="flex flex-col justify-center w-1/2">
+      <img height="100%" src="/left.png" alt="Map graphic" />
     </div>
-  </section>
 
-  <section class="counts" id="counts">
-    <div class="container">
-      <div class="section-title" data-aos="fade-up">
-        <h2>Picky&#39;s</h2>
-
-        <p>Picky&#39;s Pickup Platform</p>
-      </div>
-
-      <div class="row" data-aos="fade-up">
-        <div class="col-lg-4 col-md-6">
-          <div class="count-box">
-            <img alt="" class="img-fluid" src="/one.png" />
-            <h5>Beautiful Locations with Great Staff</h5>
-
-            <ul>
-              <li>We vet each pickup location using our Picky Standards</li>
-              <li>We audit with secret shoppers to maintain quality standards</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-          <div class="count-box">
-            <!-- <i class="bi bi-emoji-smile"></i> --><img
-              alt=""
-              class="img-fluid"
-              src="/two.png"
-            />
-            <h5>Your Local Store That Matches Your Brand</h5>
-
-            <ul>
-              <li>We match purchases with relevant pick up locations</li>
-              <li>No picking up a new dress at a tire shop</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-          <div class="count-box">
-            <!-- <i class="bi bi-hand-thumbs-up"></i> --><img
-              alt=""
-              class="img-fluid"
-              src="/three.png"
-            />
-            <h5>Awesome Customer Support Experience</h5>
-
-            <ul>
-              <li>Need to return an item? Picky makes ordering replacements a snap</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <div class="flex flex-col justify-center w-1/2 ml-4">
+      <P class="mb-4">
+        <b>Effortless Local Pickup:</b>
+        We take the complexity out of implementing local pickup by handling all the logistics and operational
+        aspects. You can focus on your core business while we ensure a smooth and seamless pickup process.
+      </P>
+      <P>
+        <b>Brand-Appropriate Locations:</b>
+        We carefully curate a network of pickup locations that match the brand image and values of our
+        partners. From trendy boutiques to convenient urban hubs, we provide locations that resonate
+        with your target audience.
+      </P>
     </div>
-  </section>
+  </div>
 
-  <section class="details cus_over1" id="details">
-    <div class="container">
-      <div class="row content">
-        <div class="col-md-6" data-aos="fade-right">
-          <img alt="" class="img-fluid" src="/about.png" />
-        </div>
-
-        <div class="col-md-6 pt-5 order-2 order-md-1 cus_over_section1" data-aos="fade-up">
-          <div class="section-title" data-aos="fade-up">
-            <h2>Picky&#39;s</h2>
-
-            <p>Key Features of Picky:</p>
-          </div>
-
-          <p>
-            Effortless Local Pickup: We take the complexity out of implementing local pickup by
-            handling all the logistics and operational aspects. You can focus on your core business
-            while we ensure a smooth and seamless pickup process.
-          </p>
-
-          <p>
-            Brand-Appropriate Locations: We carefully curate a network of pickup locations that
-            match the brand image and values of our partners. From trendy boutiques to convenient
-            urban hubs, we provide locations that resonate with your target audience.
-          </p>
-          <br />
-          &nbsp;
-        </div>
-      </div>
+  <div class="flex flex-row">
+    <div class="flex flex-col justify-center w-1/2 mr-4">
+      <P class="mb-4">
+        <b>Excellent Customer Service:</b>
+        We prioritize exceptional customer service to enhance the overall pickup experience. Our team
+        is dedicated to providing prompt and friendly support to both brands and customers, ensuring
+        satisfaction at every step.
+      </P>
+      <P>
+        <b>Seamless Integration:</b>
+        Our platform seamlessly integrates with your existing systems and workflows, making it easy to
+        implement and manage local pickup. You can track orders, manage inventory, and communicate with
+        customers, all within a unified interface.
+      </P>
     </div>
-  </section>
 
-  <section class="details cus_over1" id="details">
-    <div class="container">
-      <div class="row content">
-        <div class="col-md-6 pt-5 cus_over_section1" data-aos="fade-up">
-          <div class="section-title" data-aos="fade-up">
-            <h2>Picky&#39;s</h2>
-
-            <p>Key Features of Picky:</p>
-          </div>
-
-          <p>
-            Excellent Customer Service: We prioritize exceptional customer service to enhance the
-            overall pickup experience. Our team is dedicated to providing prompt and friendly
-            support to both brands and customers, ensuring satisfaction at every step.
-          </p>
-
-          <p>
-            Seamless Integration: Our platform seamlessly integrates with your existing systems and
-            workflows, making it easy to implement and manage local pickup. You can track orders,
-            manage inventory, and communicate with customers, all within a unified interface.
-          </p>
-          <br />
-          &nbsp;
-        </div>
-
-        <div class="col-md-6" data-aos="fade-right">
-          <img alt="" class="img-fluid" src="/right.png" />
-        </div>
-      </div>
+    <div class="flex flex-col justify-center w-1/2">
+      <img height="100%" src="/right.png" alt="Delivery graphic" />
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="counts cus_form_over" id="counts">
-    <div class="container">
-      <div class="row" data-aos="fade-up">
-        <div class="col-lg-12 col-md-6" style="text-align: center;">
-          <h1>
-            Create enduring<br />
-            memories with Picky.
-          </h1>
-
-          <p>
-            Discover the Picky difference today and join us in simplifying local pickup for digital
-            brands.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
+<section class="text-center p-12">
+  <Heading tag="h2" class="mb-4" customSize="text-3xl font-extrabold">
+    Create enduring memories with Picky.
+  </Heading>
+  <P class="mb-6 text-lg text-center">
+    Discover the Picky difference today and join us in simplifying local pickup for digital brands.
+  </P>
+  <Button color="primary" href="/register">
+    Get started
+    <svg
+      class="ml-2 -mr-1 w-5 h-5"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </Button>
+</section>
 
 <Footer />

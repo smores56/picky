@@ -16,9 +16,9 @@ export const loginRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = (await db.select().from(users).where(eq(users.email, input.email)).limit(1)).at(
-        0
-      );
+      const user = await db.query.users.findFirst({
+        where: eq(users.email, input.email)
+      });
       if (!user) {
         throw new Error("No account found with provided email/password");
       }
