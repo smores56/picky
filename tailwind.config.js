@@ -1,4 +1,5 @@
-const { tailwindcssPaletteGenerator } = require("@bobthered/tailwindcss-palette-generator");
+import { tailwindcssPaletteGenerator } from "@bobthered/tailwindcss-palette-generator";
+import flowbitePlugin from "flowbite/plugin";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -6,7 +7,7 @@ export default {
     "./src/**/*.{html,js,svelte,ts}",
     "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}"
   ],
-  plugins: [require("flowbite/plugin")],
+  plugins: [flowbitePlugin],
   darkMode: "class",
   theme: {
     extend: {

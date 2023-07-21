@@ -5,13 +5,11 @@
   import { trpc } from "$lib/trpc/client";
   import { SESSION_TOKEN_NAME } from "$lib/constants";
   import type { TRPCClientError } from "@trpc/client";
-  import ErrorToast from "$lib/components/ErrorToast.svelte";
+  import { sendToast } from "$lib/utils";
 
   let email = "";
   let password = "";
-
   let loading = false;
-  let showError: (message: string) => void;
 
   async function login() {
     try {
@@ -20,7 +18,7 @@
       localStorage.setItem(SESSION_TOKEN_NAME, token);
       await goto("/pickup-console");
     } catch (err) {
-      showError((err as TRPCClientError<any>).message);
+      sendToast((err as TRPCClientError<any>).message, "error");
     } finally {
       loading = false;
     }
@@ -73,6 +71,4 @@
       </div>
     </form>
   </Card>
-
-  <ErrorToast bind:showError />
 </div>

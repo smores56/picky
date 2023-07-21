@@ -3,24 +3,32 @@
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { trpc } from "$lib/trpc/client";
-  import { SESSION_TOKEN_NAME } from "$lib/constants";
   import type { TRPCClientError } from "@trpc/client";
-  import ErrorToast from "$lib/components/ErrorToast.svelte";
+  import type { NewAddress } from "$lib/server/db/schema";
+  import { sendToast } from "$lib/utils";
 
   let email = "";
   let password = "";
+  let firstName = "";
+  let lastName = "";
+  let address: NewAddress = {
+    lineOne: "",
+    lineTwo: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: ""
+  };
 
   let loading = false;
-  let showError: (message: string) => void;
 
-  async function login() {
+  async function register() {
     try {
       loading = true;
-      const token = await trpc($page).login.mutate({ email, password });
-      localStorage.setItem(SESSION_TOKEN_NAME, token);
-      await goto("/pickup-console");
+      await trpc($page).register.mutate({ email, password, firstName, lastName, address });
+      await goto("/login");
     } catch (err) {
-      showError((err as TRPCClientError<any>).message);
+      sendToast((err as TRPCClientError<any>).message, "error");
     } finally {
       loading = false;
     }
@@ -33,7 +41,7 @@
   </a>
 
   <Card class="flex flex-none w-1/2 h-1/2">
-    <form class="flex-none flex-col space-y-6" on:submit|preventDefault={login}>
+    <form class="flex-none flex-col space-y-6" on:submit|preventDefault={register}>
       <h3 class="text-xl font-medium text-gray-900">Sign up for Picky</h3>
       <Label class="space-y-2">
         <span>Email</span>
@@ -71,6 +79,4 @@
       </div>
     </form>
   </Card>
-
-  <ErrorToast bind:showError />
 </div>

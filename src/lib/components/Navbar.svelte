@@ -25,7 +25,9 @@
     {:else}
       <Button size="sm" class="text-lg bg-secondary-500" href="/register">Get started</Button>
     {/if}
+    <!--
     <NavHamburger on:click={toggle} />
+    -->
   </div>
 
   <NavUl {hidden} class="order-1">
