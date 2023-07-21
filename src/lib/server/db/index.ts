@@ -7,7 +7,7 @@ import * as schema from "./schema";
 // for migrations
 const migrationClient = postgres(env.DATABASE_URL, { max: 1 });
 migrate(drizzle(migrationClient), {
-  migrationsFolder: "src/lib/server/db/migrations"
+  migrationsFolder: "src/lib/server/db/migrations/"
 });
 
 // for query purposes

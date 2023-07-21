@@ -1,10 +1,9 @@
 import { z } from "zod";
-import * as scrypt from "scrypt-kdf";
 import { router, publicProcedure } from "$lib/trpc/router/base";
 import { db } from "$lib/server/db";
 import { eq } from "drizzle-orm";
 import { addresses, users } from "$lib/server/db/schema";
-import { SCRYPT_PARAMS } from "$lib/constants";
+import * as argon2 from "argon2";
 
 const ZodNewAddress = z.object({
   lineOne: z.string(),
@@ -12,7 +11,8 @@ const ZodNewAddress = z.object({
   city: z.string(),
   state: z.string(),
   zipCode: z.string(),
-  country: z.string()
+  country: z.string(),
+  phoneNumber: z.string()
 });
 
 export const registerRouter = router({
@@ -35,8 +35,7 @@ export const registerRouter = router({
         throw new Error("A user already has that email address");
       }
 
-      const passwordHashBytes = await scrypt.kdf(input.password, SCRYPT_PARAMS);
-      const passwordHash = new TextDecoder().decode(passwordHashBytes);
+      const passwordHash = await argon2.hash(input.password);
 
       return await db.transaction(async (tx) => {
         const [{ id: newAddressId }] = await tx

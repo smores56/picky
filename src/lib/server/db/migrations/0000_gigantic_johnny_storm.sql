@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS "addresses" (
 	"city" varchar NOT NULL,
 	"state" varchar NOT NULL,
 	"zip_code" varchar NOT NULL,
-	"country" varchar NOT NULL
+	"country" varchar NOT NULL,
+	"phone_number" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orders" (

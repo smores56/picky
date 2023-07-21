@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { uuid } from "uuidv4";
-import * as scrypt from "scrypt-kdf";
 import { cleanupSessionsForUser } from "$lib/server/utils";
 import { router, publicProcedure } from "$lib/trpc/router/base";
 import { db } from "$lib/server/db";
 import { eq } from "drizzle-orm";
 import { sessions, users } from "$lib/server/db/schema";
+import * as argon2 from "argon2";
 
 export const loginRouter = router({
   login: publicProcedure
@@ -23,8 +23,7 @@ export const loginRouter = router({
         throw new Error("No account found with provided email/password");
       }
 
-      const passwordHashBytes = new TextEncoder().encode(user.passwordHash);
-      const validPassword = await scrypt.verify(passwordHashBytes, input.password);
+      const validPassword = await argon2.verify(user.passwordHash, input.password);
       if (!validPassword) {
         throw new Error("No account found with provided email/password");
       }

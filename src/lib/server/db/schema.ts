@@ -8,7 +8,8 @@ export const addresses = pgTable("addresses", {
   city: varchar("city").notNull(),
   state: varchar("state").notNull(),
   zipCode: varchar("zip_code").notNull(),
-  country: varchar("country").notNull()
+  country: varchar("country").notNull(),
+  phoneNumber: varchar("phone_number").notNull()
 });
 
 export type Address = InferModel<typeof addresses>;

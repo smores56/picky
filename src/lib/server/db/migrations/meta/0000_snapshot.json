@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a65e49f9-8b60-48c3-b9e8-a737a8c039dc",
+  "id": "9b23ba17-f707-4152-9e72-4a0064eb16da",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -46,6 +46,12 @@
         },
         "country": {
           "name": "country",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -104,8 +110,12 @@
           "name": "orders_current_location_id_addresses_id_fk",
           "tableFrom": "orders",
           "tableTo": "addresses",
-          "columnsFrom": ["current_location_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "current_location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "cascade"
         },
@@ -113,8 +123,12 @@
           "name": "orders_pickup_location_id_pickup_locations_id_fk",
           "tableFrom": "orders",
           "tableTo": "pickup_locations",
-          "columnsFrom": ["pickup_location_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "pickup_location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -151,8 +165,12 @@
           "name": "pickup_locations_address_id_addresses_id_fk",
           "tableFrom": "pickup_locations",
           "tableTo": "addresses",
-          "columnsFrom": ["address_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "address_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -196,8 +214,12 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -252,8 +274,12 @@
           "name": "users_address_id_addresses_id_fk",
           "tableFrom": "users",
           "tableTo": "addresses",
-          "columnsFrom": ["address_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "address_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -263,7 +289,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       }
     }
