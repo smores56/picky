@@ -1,18 +1,17 @@
-import { derived, type Readable } from "svelte/store";
-import { toastMessage, type ToastMessageType } from "./stores";
+import { browser } from "$app/environment";
+import { SESSION_TOKEN_NAME } from "$lib/constants";
+import type { Address } from "$lib/server/db/schema";
 
-export function sendToast(message: string, type: ToastMessageType) {
-  toastMessage.set({ message, type, remainingMs: 5000 });
+export function getSessionToken(): string | undefined {
+  if (!browser) return undefined;
+
+  return sessionStorage.getItem(SESSION_TOKEN_NAME)
+    ?? localStorage.getItem(SESSION_TOKEN_NAME)
+    ?? undefined;
 }
 
-export function dedupe<T>(store: Readable<T>): Readable<T> {
-  let previous: T
+export function formatAddress(address: Address): string {
+  const streetLocation = address.lineTwo ? `${address.lineOne} ${address.lineTwo}` : address.lineOne;
 
-  return derived(store, ($value, set) => {
-    if ($value !== previous) {
-      previous = $value
-      set($value)
-    }
-  })
+  return `${streetLocation}, ${address.city}, ${address.state} ${address.zipCode}`;
 }
-

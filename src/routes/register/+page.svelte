@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Card, Button, Label, Input, Spinner, Hr, Heading, List, Li } from "flowbite-svelte";
+  import { Card, Button, Label, Input, Spinner, Hr, List, Li } from "flowbite-svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { trpc } from "$lib/trpc/client";
   import type { TRPCClientError } from "@trpc/client";
   import type { NewAddress } from "$lib/server/db/schema";
-  import { sendToast } from "$lib/utils";
+  import { getCurrentAddress } from "$lib/geocoding";
+  import { sendToast } from "$lib/toast";
 
   let firstName = "";
   let lastName = "";
@@ -18,19 +19,28 @@
     city: "",
     state: "",
     zipCode: "",
-    country: "",
-    phoneNumber: ""
+    phoneNumber: "",
+    latitude: 0,
+    longitude: 0
   };
 
   let loading = false;
 
   const passwordRequirements: [string, (p: string) => boolean][] = [
-    ["be at least 12 letters", (p) => p.length >= 12],
+    ["be at least 12 characters", (p) => p.length >= 12],
     ["contain at least one lowercase letter", (p) => !!/[a-z]/.exec(p)],
     ["contain at least one uppercase letter", (p) => !!/[A-Z]/.exec(p)],
     ["contain at least one number", (p) => !!/\d/.exec(p)],
     ["contain at least one symbol", (p) => !!/[^\w\d]/.exec(p)]
   ];
+
+  async function autoPopulateAddress() {
+    try {
+      address = await getCurrentAddress(trpc($page));
+    } catch (e) {
+      sendToast(e as string, "error");
+    }
+  }
 
   function validate(): string | null {
     if (passwordRequirements.filter(([_, test]) => !test(password)).length > 0) {
@@ -177,21 +187,19 @@
           />
         </div>
         <div>
-          <Label for="country" class="mb-2">Country *</Label>
-          <Input type="text" id="country" placeholder="USA" required bind:value={address.country} />
+          <Label for="phone" class="mb-2">Phone number</Label>
+          <Input
+            type="tel"
+            id="phone"
+            placeholder="123-456-7890"
+            bind:value={address.phoneNumber}
+          />
         </div>
       </div>
 
-      <div>
-        <Label for="phone" class="mb-2">Phone number</Label>
-        <Input
-          type="tel"
-          id="phone"
-          placeholder="123-456-7890"
-          pattern="\d{3}-\d{3}-\d{4}"
-          bind:value={address.phoneNumber}
-        />
-      </div>
+      <Button color="primary" class="w-full" on:click={autoPopulateAddress}>
+        Use current address
+      </Button>
 
       <Button color="primary" type="submit" class="w-full">
         {#if loading}

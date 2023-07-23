@@ -5,10 +5,6 @@
   import Navbar from "$lib/components/Navbar.svelte";
 </script>
 
-<svelte:head>
-  <title>Picky</title>
-</svelte:head>
-
 <Navbar />
 
 <section class="flex justify-center p-12">

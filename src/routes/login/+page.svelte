@@ -5,8 +5,7 @@
   import { trpc } from "$lib/trpc/client";
   import { SESSION_TOKEN_NAME } from "$lib/constants";
   import type { TRPCClientError } from "@trpc/client";
-  import { sendToast } from "$lib/utils";
-  import { sessionToken } from "$lib/stores";
+  import { sendToast } from "$lib/toast";
 
   let email = "";
   let password = "";
@@ -17,9 +16,12 @@
     try {
       loading = true;
       const token = await trpc($page).login.mutate({ email, password });
-      sessionToken.set(token);
-      if (remember) localStorage.setItem(SESSION_TOKEN_NAME, token);
-      await goto("/pickup-console");
+      if (remember) {
+        localStorage.setItem(SESSION_TOKEN_NAME, token);
+      } else {
+        sessionStorage.setItem(SESSION_TOKEN_NAME, token);
+      }
+      await goto("/pickup-locations");
     } catch (err) {
       sendToast((err as TRPCClientError<any>).message, "error");
     } finally {

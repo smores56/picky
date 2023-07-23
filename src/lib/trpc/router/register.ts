@@ -4,16 +4,8 @@ import { db } from "$lib/server/db";
 import { eq } from "drizzle-orm";
 import { addresses, users } from "$lib/server/db/schema";
 import * as argon2 from "argon2";
-
-const ZodNewAddress = z.object({
-  lineOne: z.string(),
-  lineTwo: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zipCode: z.string(),
-  country: z.string(),
-  phoneNumber: z.string()
-});
+import { ZodNewAddress } from "$lib/trpc/types";
+import { getCoordsForAddress } from "$lib/server/utils";
 
 export const registerRouter = router({
   register: publicProcedure
@@ -35,13 +27,21 @@ export const registerRouter = router({
         throw new Error("A user already has that email address");
       }
 
-      const passwordHash = await argon2.hash(input.password);
+      const [passwordHash, position] = await Promise.all([
+        argon2.hash(input.password),
+        getCoordsForAddress(input.address)
+      ]);
+      if (!position) {
+        throw new Error(`Coordinates could not be determined for the given address`);
+      }
 
       return await db.transaction(async (tx) => {
         const [{ id: newAddressId }] = await tx
           .insert(addresses)
           .values({
-            ...input.address
+            ...input.address,
+            latitude: position.latitude,
+            longitude: position.longitude
           })
           .returning({ id: addresses.id });
         const [{ id: newUserId }] = await tx
@@ -51,7 +51,7 @@ export const registerRouter = router({
             passwordHash,
             firstName: input.firstName,
             lastName: input.lastName,
-            addressId: newAddressId
+            address: newAddressId
           })
           .returning({ id: users.id });
 

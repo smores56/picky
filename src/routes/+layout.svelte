@@ -4,16 +4,10 @@
   import { Toast } from "flowbite-svelte";
   import { slide } from "svelte/transition";
   import { onDestroy } from "svelte";
-  import { toastMessage } from "$lib/stores";
-  import { derived } from "svelte/store";
-  import { dedupe } from "$lib/utils";
+  import { toastMessage } from "$lib/toast";
   import { browser } from "$app/environment";
 
-  const interval = setInterval(() => {
-    toastMessage.update((tm) => ({ ...tm, remainingMs: tm.remainingMs - 500 }));
-  }, 500);
-
-  const unsubscribe = dedupe(derived(toastMessage, (tm) => tm.message)).subscribe(() => {
+  const unsubscribe = toastMessage.subscribe(() => {
     if (browser && window) {
       window.scrollTo({
         top: 0,
@@ -24,12 +18,11 @@
 
   onDestroy(() => {
     unsubscribe();
-    clearInterval(interval);
   });
 </script>
 
 <div class="bg-wallpaper w-full min-h-screen">
-  <Toast simple position="top-right" transition={slide} open={$toastMessage.remainingMs > 0}>
+  <Toast simple position="top-right" transition={slide} open={!!$toastMessage.message}>
     {#if $toastMessage.type === "error"}
       <span class="text-error-500">
         <b>Error:</b>

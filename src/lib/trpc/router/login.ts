@@ -34,7 +34,7 @@ export const loginRouter = router({
         .select()
         .from(sessions)
         .where(eq(sessions.origin, ctx.clientAddress))
-        .where(eq(sessions.userId, user.id));
+        .where(eq(sessions.user, user.id));
 
       if (existingSessions.length > 0) {
         await db
@@ -48,7 +48,7 @@ export const loginRouter = router({
         await db.insert(sessions).values({
           token,
           origin: ctx.clientAddress,
-          userId: user.id
+          user: user.id
         });
 
         return token;

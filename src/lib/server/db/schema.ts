@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import { boolean, date, integer, pgTable, primaryKey, real, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 import type { InferModel } from "drizzle-orm";
 
 export const addresses = pgTable("addresses", {
@@ -8,7 +8,8 @@ export const addresses = pgTable("addresses", {
   city: varchar("city").notNull(),
   state: varchar("state").notNull(),
   zipCode: varchar("zip_code").notNull(),
-  country: varchar("country").notNull(),
+  latitude: real("latitude").notNull(),
+  longitude: real("longitude").notNull(),
   phoneNumber: varchar("phone_number").notNull()
 });
 
@@ -21,7 +22,7 @@ export const users = pgTable("users", {
   passwordHash: varchar("password_hash").notNull(),
   firstName: varchar("first_name").notNull(),
   lastName: varchar("last_name").notNull(),
-  addressId: integer("address_id").references(() => addresses.id, {
+  address: integer("address_id").references(() => addresses.id, {
     onUpdate: "cascade",
     onDelete: "set null"
   })
@@ -34,7 +35,7 @@ export const sessions = pgTable("sessions", {
   token: varchar("token").primaryKey(),
   origin: varchar("origin").notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  userId: integer("user_id").references(() => users.id, {
+  user: integer("user_id").references(() => users.id, {
     onUpdate: "cascade",
     onDelete: "cascade"
   })
@@ -46,7 +47,11 @@ export type NewSession = InferModel<typeof sessions, "insert">;
 export const pickupLocations = pgTable("pickup_locations", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
-  addressId: integer("address_id").references(() => addresses.id, {
+  owner: integer("owner_id").notNull().references(() => users.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade"
+  }),
+  address: integer("address_id").references(() => addresses.id, {
     onUpdate: "cascade",
     onDelete: "set null"
   })
@@ -55,16 +60,43 @@ export const pickupLocations = pgTable("pickup_locations", {
 export type PickupLocation = InferModel<typeof pickupLocations>;
 export type NewPickupLocation = InferModel<typeof pickupLocations, "insert">;
 
+export const pickupLocationDayHours = pgTable("pickup_location_hours", {
+  location: integer("location_id").notNull().references(() => pickupLocations.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade"
+  }),
+  dayOfWeek: integer("day_of_week").notNull(),
+  startingHour: integer("starting_hour"),
+  endingHour: integer("ending_hour")
+}, (table) => ({
+  pk: primaryKey(table.location, table.dayOfWeek),
+}));
+
+export type PickupLocationDayHours = InferModel<typeof pickupLocationDayHours>;
+export type NewPickupLocationDayHours = InferModel<typeof pickupLocationDayHours, "insert">;
+
+export const pickupLocationClosedDays = pgTable("pickup_location_closed_days", {
+  id: serial("id").primaryKey(),
+  location: integer("location_id").notNull().references(() => pickupLocations.id, {
+    onUpdate: "cascade",
+    onDelete: "cascade"
+  }),
+  closed_date: date("closed_date").notNull()
+});
+
+export type PickupLocationClosedDay = InferModel<typeof pickupLocationClosedDays>;
+export type NewPickupLocationClosedDay = InferModel<typeof pickupLocationClosedDays, "insert">;
+
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   itemName: varchar("item_name").notNull(),
   imageLink: varchar("image_link"),
   completed: boolean("completed").default(false).notNull(),
-  currentLocationId: integer("current_location_id").references(() => addresses.id, {
+  currentLocation: integer("current_location_id").references(() => addresses.id, {
     onUpdate: "cascade",
     onDelete: "set null"
   }),
-  pickupLocationId: integer("pickup_location_id").references(() => pickupLocations.id, {
+  pickupLocation: integer("pickup_location_id").references(() => pickupLocations.id, {
     onUpdate: "cascade",
     onDelete: "set null"
   })

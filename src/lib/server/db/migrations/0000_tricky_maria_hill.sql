@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS "addresses" (
 	"city" varchar NOT NULL,
 	"state" varchar NOT NULL,
 	"zip_code" varchar NOT NULL,
-	"country" varchar NOT NULL,
+	"latitude" real NOT NULL,
+	"longitude" real NOT NULL,
 	"phone_number" varchar NOT NULL
 );
 --> statement-breakpoint
@@ -18,9 +19,24 @@ CREATE TABLE IF NOT EXISTS "orders" (
 	"pickup_location_id" integer
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pickup_location_closed_days" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"location_id" integer NOT NULL,
+	"closed_date" date NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pickup_location_hours" (
+	"location_id" integer NOT NULL,
+	"day_of_week" integer NOT NULL,
+	"starting_hour" integer,
+	"ending_hour" integer,
+	CONSTRAINT pickup_location_hours_location_id_day_of_week PRIMARY KEY("location_id","day_of_week")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "pickup_locations" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar NOT NULL,
+	"owner_id" integer NOT NULL,
 	"address_id" integer
 );
 --> statement-breakpoint
@@ -49,6 +65,24 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "orders" ADD CONSTRAINT "orders_pickup_location_id_pickup_locations_id_fk" FOREIGN KEY ("pickup_location_id") REFERENCES "pickup_locations"("id") ON DELETE set null ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pickup_location_closed_days" ADD CONSTRAINT "pickup_location_closed_days_location_id_pickup_locations_id_fk" FOREIGN KEY ("location_id") REFERENCES "pickup_locations"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pickup_location_hours" ADD CONSTRAINT "pickup_location_hours_location_id_pickup_locations_id_fk" FOREIGN KEY ("location_id") REFERENCES "pickup_locations"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pickup_locations" ADD CONSTRAINT "pickup_locations_owner_id_users_id_fk" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

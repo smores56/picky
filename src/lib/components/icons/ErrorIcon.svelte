@@ -1,9 +1,11 @@
+<script lang="ts">
+</script>
+
 <svg
-  aria-hidden="true"
-  class="w-5 h-5"
-  fill="fill-red-500"
+  class="w-5 h-5 fill-error-500"
   viewBox="0 0 20 20"
   xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
 >
   <path
     fill-rule="evenodd"
