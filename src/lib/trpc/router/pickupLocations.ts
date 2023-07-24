@@ -2,7 +2,7 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "$lib/server/db";
 import { router, publicProcedure } from "$lib/trpc/router/base";
-import { addresses, pickupLocations } from "$lib/server/db/schema";
+import { addresses, orders, pickupLocations } from "$lib/server/db/schema";
 import { DDPoint, Haversine } from "haversine-ts";
 import * as hav from "haversine-ts";
 import { ZodNewAddress } from "$lib/trpc/types";
@@ -20,17 +20,22 @@ export const pickupLocationsRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const locationList = await db.select().from(pickupLocations)
-        .innerJoin(addresses, eq(addresses.id, pickupLocations.address))
-        .where(eq(pickupLocations.id, input.id));
-
-      if (locationList.length === 0) {
+      const pickupLocation = await db.query
+        .pickupLocations
+        .findFirst({ where: eq(pickupLocations.id, input.id) });
+      if (!pickupLocation) {
         throw new Error(`No pickup location found with id ${input.id}`);
       }
 
+      const [locationAddress, locationOrders] = await Promise.all([
+        db.query.addresses.findFirst({ where: eq(addresses.id, pickupLocation.address || 0) }),
+        db.query.orders.findMany({ where: eq(orders.pickupLocation, pickupLocation.id) }),
+      ]);
+
       return {
-        ...locationList[0].pickup_locations,
-        address: locationList[0].addresses
+        ...pickupLocation,
+        address: locationAddress!,
+        orders: locationOrders
       };
     }),
   pickupLocationsWithinDistance: publicProcedure

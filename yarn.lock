@@ -2656,6 +2656,11 @@ source-map@^0.6.0:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
+states-us@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/states-us/-/states-us-1.0.2.tgz#60dacdcc7c8397e0d443f903d356591d8dc0ee25"
+  integrity sha512-0t0C8mfjwZuo6xyRi3OJJtYa06YAC4l8VU2+BBamKeQJtPXKjJawu/TvkdqBxA9WAYK1tBO1vL7ql0kXYn3J4Q==
+
 streamsearch@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"

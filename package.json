@@ -47,6 +47,7 @@
     "haversine-ts": "^1.2.0",
     "opencage-api-client": "^1.0.2",
     "postgres": "^3.3.5",
+    "states-us": "^1.0.2",
     "trpc-sveltekit": "^3.5.16",
     "uuidv4": "^6.2.13",
     "zod": "^3.21.4"
