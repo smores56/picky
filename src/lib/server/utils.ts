@@ -4,7 +4,7 @@ import { addresses, pickupLocations, sessions, users } from "$lib/server/db/sche
 import { db } from "$lib/server/db";
 import { and, eq, lte } from "drizzle-orm";
 import { env } from "$env/dynamic/private";
-import * as oc from "opencage-api-client";
+import oc from "opencage-api-client";
 import type { ZodNewAddress, ZodCoordinates, OpenCageResponse } from "$lib/trpc/types";
 
 export async function loadUserWithSession(sessionToken: string) {

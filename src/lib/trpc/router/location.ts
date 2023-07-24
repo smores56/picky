@@ -1,5 +1,5 @@
 import { router, publicProcedure } from "$lib/trpc/router/base";
-import * as oc from "opencage-api-client";
+import oc from "opencage-api-client";
 import { env } from "$env/dynamic/private";
 import type { NewAddress } from "$lib/server/db/schema";
 import { ZodCoordinates, type OpenCageResponse, ZodNewAddress } from "$lib/trpc/types";
