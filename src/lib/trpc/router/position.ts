@@ -5,7 +5,7 @@ import type { NewAddress } from "$lib/server/db/schema";
 import { ZodCoordinates, type OpenCageResponse, ZodNewAddress } from "$lib/trpc/types";
 import { getCoordsForAddress } from "$lib/server/utils";
 
-export const locationRouter = router({
+export const positionRouter = router({
   coordsFromAddress: publicProcedure
     .input(ZodNewAddress)
     .query(async ({ input }) => {

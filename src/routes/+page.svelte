@@ -1,8 +1,31 @@
 <script lang="ts">
   import { Heading, P, Button, Input, Label, Card, List, Li } from "flowbite-svelte";
-
   import Footer from "$lib/components/Footer.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
+  import { getCurrentAddress, getGeoPosition } from "$lib/geocoding";
+  import { page } from "$app/stores";
+  import { trpc } from "$lib/trpc/client";
+  import { sendToast } from "$lib/toast";
+  import type { TRPCClientError } from "@trpc/client";
+
+  let zipCode = "";
+  let loadingZipCode = false;
+
+  async function getZipCode() {
+    try {
+      loadingZipCode = true;
+      const address = await getCurrentAddress(trpc($page));
+      zipCode = address.zipCode;
+    } catch (err) {
+      sendToast((err as TRPCClientError<any>).message, "error");
+    } finally {
+      loadingZipCode = false;
+    }
+  }
+
+  async function findStores() {
+    sendToast("Finding stores isn't ready yet, coming soon!", "info");
+  }
 </script>
 
 <Navbar />
@@ -19,9 +42,33 @@
       </Heading>
 
       <div class="my-6 mr-6">
-        <Label for="large-input" class="block mb-2">Zip Code</Label>
-        <Input size="lg" type="number" minlength="5" maxlength="5" placeholder="12345" />
-        <Button color="primary" class="mt-6 w-full">Find a location</Button>
+        <form on:submit|preventDefault={findStores}>
+          <Label for="zip_code" class="block mb-2">
+            Zip Code
+            <span
+              class="cursor-pointer text-primary-700 hover:text-primary-500"
+              on:click={getZipCode}
+            >
+              {#if loadingZipCode}
+                (Getting your location...)
+              {:else}
+                (Use my location)
+              {/if}
+            </span>
+          </Label>
+
+          <Input
+            size="lg"
+            id="zip_code"
+            type="number"
+            minlength="5"
+            maxlength="5"
+            placeholder="12345"
+            bind:value={zipCode}
+            required
+          />
+          <Button color="primary" type="submit" class="mt-6 w-full">Find a location</Button>
+        </form>
       </div>
     </div>
 

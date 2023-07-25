@@ -26,6 +26,7 @@
 
   let loading = false;
 
+  // TODO: https://flowbite-svelte.com/docs/typography/list#Icons
   const passwordRequirements: [string, (p: string) => boolean][] = [
     ["be at least 12 characters", (p) => p.length >= 12],
     ["contain at least one lowercase letter", (p) => !!/[a-z]/.exec(p)],

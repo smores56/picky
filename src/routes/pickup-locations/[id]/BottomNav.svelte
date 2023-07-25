@@ -12,7 +12,7 @@
   const svgActiveClass = "w-6 h-6 mb-1 text-primary-700 group-hover:text-primary-900";
 </script>
 
-<BottomNav position="absolute" classInner="grid-cols-4" classActive="font-bold text-blue-700">
+<BottomNav position="sticky" classInner="grid-cols-4" classActive="font-bold text-blue-700">
   <BottomNavItem btnName="Home" active={tab === "home"} on:click={() => (tab = "home")}>
     <HomeIcon svgClass={tab === "home" ? svgActiveClass : svgClass} />
   </BottomNavItem>

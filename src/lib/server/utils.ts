@@ -66,3 +66,12 @@ export async function getCoordsForAddress(address: z.infer<typeof ZodNewAddress>
     longitude: result.results[0].geometry.lng
   }
 }
+
+export function choice<T>(items: T[]): T {
+  if (items.length === 0) {
+    throw new Error("Cannot choose random item from empty list");
+  }
+
+  const index = Math.floor(Math.random() * items.length);
+  return items[index];
+}
