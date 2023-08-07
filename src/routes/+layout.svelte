@@ -4,7 +4,7 @@
   import { Toast } from "flowbite-svelte";
   import { slide } from "svelte/transition";
   import { onDestroy } from "svelte";
-  import { toastMessage } from "$lib/toast";
+  import { sendToast, toastMessage } from "$lib/toast";
   import { browser } from "$app/environment";
 
   const unsubscribe = toastMessage.subscribe(() => {
@@ -16,13 +16,23 @@
     }
   });
 
+  function closeToast() {
+    sendToast("", "info");
+  }
+
   onDestroy(() => {
     unsubscribe();
   });
 </script>
 
 <div class="bg-wallpaper w-full min-h-screen">
-  <Toast simple position="top-right" transition={slide} open={!!$toastMessage.message}>
+  <Toast
+    simple
+    position="top-right"
+    transition={slide}
+    open={!!$toastMessage.message}
+    on:click={closeToast}
+  >
     {#if $toastMessage.type === "error"}
       <span class="text-error-500">
         <b>Error:</b>

@@ -41,7 +41,7 @@
         We make in-store pickup <i>easy</i>.
       </Heading>
 
-      <div class="my-6 mr-6">
+      <div class="my-6 md:mr-6">
         <form on:submit|preventDefault={findStores}>
           <Label for="zip_code" class="block mb-2">
             Zip Code
@@ -78,7 +78,7 @@
   </div>
 </section>
 
-<section class="flex justify-center p-12 bg-primary-300">
+<section class="flex justify-center p-12 bg-accent">
   <div class="flex flex-col-reverse md:flex-row max-w-6xl">
     <div class="flex flex-col justify-center md_w-1/2">
       <img height="100%" src="/about2.png" alt="Map graphic" />
@@ -139,7 +139,7 @@
   </div>
 </section>
 
-<section class="flex justify-center p-12 bg-primary-300">
+<section class="flex justify-center p-12 bg-accent">
   <div class="flex flex-col max-w-6xl">
     <Heading tag="h2" class="mb-6" customSize="align-center text-center text-4xl font-extrabold">
       Key Features
