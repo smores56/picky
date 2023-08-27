@@ -2,9 +2,9 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { sendToast } from "$lib/toast";
-  import { Button, Heading, Input, Label, Spinner } from "flowbite-svelte";
+  import { Button, ButtonGroup, Heading, Input, InputAddon, Label, NumberInput, Spinner } from "flowbite-svelte";
   import Navbar from "$lib/components/Navbar.svelte";
-  import type { NewAddress } from "$lib/server/db/schema";
+  import type { NewAddress, NewPickupLocationDayHours } from "$lib/server/db/schema";
   import { getCurrentAddress, getGeoPosition } from "$lib/geocoding";
   import type { ZodCoordinates } from "$lib/trpc/types";
   import type { z } from "zod";
@@ -22,6 +22,9 @@
     latitude: 0,
     longitude: 0
   };
+  let hours: NewPickupLocationDayHours[] = [{}, {}, {}, {}, {}, {}, {}];
+
+  const weekdays: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   let nearbyLocations: z.infer<typeof ZodCoordinates>[] | null = null;
 
@@ -63,7 +66,8 @@
       loading = true;
       const newPickupLocationId = await trpc($page).registerPickupLocation.mutate({
         name,
-        address
+        address,
+        hours
       });
       goto(`/pickup-locations/${newPickupLocationId}`);
     } catch (e) {
@@ -86,6 +90,7 @@
         <Input type="text" id="name" placeholder="The Widget Shop" required bind:value={name} />
       </div>
 
+      <h3 class="text-xl text-gray-900 mt-8 border-b">Location</h3>
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div>
           <Label for="address_line_one" class="mb-2">Address Line One *</Label>
@@ -136,6 +141,44 @@
           Use my current address
         </Button>
       </div>
+
+      <h3 class="text-xl text-gray-900 mt-8 border-b">Hours</h3>
+      {#each weekdays as day, i}
+        <div class="flex space-x-6 items-center">
+          <Label class="w-1/4 ml-8">{day}</Label>
+          <ButtonGroup>
+            <NumberInput
+              id="{day}_open_hour"
+              placeholder="8"
+              bind:value={hours[i].startingHour}
+              class="w-16"
+            />
+            <InputAddon>:</InputAddon>
+            <NumberInput
+              id="{day}_open_minute"
+              placeholder="00"
+              bind:value={hours[i].startingMinute}
+              class="w-16"
+            />
+          </ButtonGroup>
+          <div>~</div>
+          <ButtonGroup>
+            <NumberInput
+              id="{day}_open_hour"
+              placeholder="17"
+              bind:value={hours[i].endingHour}
+              class="w-16"
+            />
+            <InputAddon>:</InputAddon>
+            <NumberInput
+              id="{day}_open_minute"
+              placeholder="30"
+              bind:value={hours[i].endingMinute}
+              class="w-16"
+            />
+          </ButtonGroup>
+        </div>
+      {/each}
 
       <Button color="primary" type="submit" class="w-full">
         {#if loading}

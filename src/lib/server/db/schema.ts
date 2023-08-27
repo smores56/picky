@@ -21,11 +21,7 @@ export const users = pgTable("users", {
   email: varchar("email").notNull().unique(),
   passwordHash: varchar("password_hash").notNull(),
   firstName: varchar("first_name").notNull(),
-  lastName: varchar("last_name").notNull(),
-  address: integer("address_id").references(() => addresses.id, {
-    onUpdate: "cascade",
-    onDelete: "set null"
-  })
+  lastName: varchar("last_name").notNull()
 });
 
 export type User = InferModel<typeof users>;
@@ -67,7 +63,9 @@ export const pickupLocationDayHours = pgTable("pickup_location_hours", {
   }),
   dayOfWeek: integer("day_of_week").notNull(),
   startingHour: integer("starting_hour"),
-  endingHour: integer("ending_hour")
+  startingMinute: integer("starting_minute"),
+  endingHour: integer("ending_hour"),
+  endingMinute: integer("ending_minute")
 }, (table) => ({
   pk: primaryKey(table.location, table.dayOfWeek),
 }));

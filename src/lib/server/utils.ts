@@ -21,7 +21,7 @@ export async function loadUserWithSession(sessionToken: string) {
   const [userList, pickupLocationList] = await Promise.all([
     db.select()
       .from(users)
-      .innerJoin(addresses, eq(addresses.id, users.address)),
+      .where(eq(users.id, userId)),
     db.select({ id: pickupLocations.id })
       .from(pickupLocations)
       .where(eq(pickupLocations.owner, userId))
@@ -29,8 +29,7 @@ export async function loadUserWithSession(sessionToken: string) {
 
   if (userList.length === 0) return null;
   return {
-    ...userList[0].users,
-    address: userList[0].addresses,
+    ...userList[0],
     pickupLocations: pickupLocationList.map(pl => pl.id)
   };
 }

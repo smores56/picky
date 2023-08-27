@@ -2,10 +2,10 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "$lib/server/db";
 import { router, publicProcedure } from "$lib/trpc/router/base";
-import { addresses, orders, pickupLocations } from "$lib/server/db/schema";
+import { addresses, orders, pickupLocations, pickupLocationDayHours } from "$lib/server/db/schema";
 import { DDPoint, Haversine } from "haversine-ts";
 import * as hav from "haversine-ts";
-import { ZodNewAddress } from "$lib/trpc/types";
+import { ZodNewAddress, ZodNewHours } from "$lib/trpc/types";
 
 export const pickupLocationsRouter = router({
   pickupLocationsForUser: publicProcedure.query(async ({ ctx }) => {
@@ -64,11 +64,15 @@ export const pickupLocationsRouter = router({
     .input(z.object({
       name: z.string(),
       address: ZodNewAddress,
+      hours: ZodNewHours
     }))
     .mutation(async ({ ctx, input }) => {
       const user = ctx.user;
       if (!user) {
         throw new Error("Must be logged in to register pickup location");
+      }
+      if (input.hours.length != 7) {
+        throw new Error("Must have exactly 7 business-hour entries");
       }
 
       return await db.transaction(async tx => {
@@ -82,6 +86,14 @@ export const pickupLocationsRouter = router({
             address: newAddressId
           })
           .returning({ id: pickupLocations.id });
+        input.hours.forEach(async (dayHours, day) => {
+          await tx.insert(pickupLocationDayHours)
+            .values({
+              location: newLocationId,
+              dayOfWeek: day,
+              ...dayHours
+            })
+        })
 
         return newLocationId;
       })

@@ -11,6 +11,13 @@ export const ZodNewAddress = z.object({
   longitude: z.number()
 });
 
+export const ZodNewHours = z.array(z.object({
+    startingHour: z.number(),
+    startingMinute: z.number(),
+    endingHour: z.number(),
+    endingMinute: z.number()
+}));
+
 export const ZodCoordinates = z.object({
   latitude: z.number(),
   longitude: z.number()

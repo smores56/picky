@@ -65,7 +65,6 @@ export const usersRouter = router({
         password: z.string(),
         firstName: z.string(),
         lastName: z.string(),
-        address: ZodNewAddress
       })
     )
     .mutation(async ({ input }) => {
@@ -77,31 +76,18 @@ export const usersRouter = router({
         throw new Error("A user already has that email address");
       }
 
-      const [passwordHash, position] = await Promise.all([
+      const passwordHash = await Promise.all([
         argon2.hash(input.password),
-        getCoordsForAddress(input.address)
       ]);
-      if (!position) {
-        throw new Error(`Coordinates could not be determined for the given address`);
-      }
 
       return await db.transaction(async (tx) => {
-        const [{ id: newAddressId }] = await tx
-          .insert(addresses)
-          .values({
-            ...input.address,
-            latitude: position.latitude,
-            longitude: position.longitude
-          })
-          .returning({ id: addresses.id });
         const [{ id: newUserId }] = await tx
           .insert(users)
           .values({
             email: input.email,
             passwordHash,
             firstName: input.firstName,
-            lastName: input.lastName,
-            address: newAddressId
+            lastName: input.lastName
           })
           .returning({ id: users.id });
 
